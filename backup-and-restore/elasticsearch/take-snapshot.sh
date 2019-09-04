@@ -1,8 +1,11 @@
 #!/bin/bash
 
 take_snapshot(){
+  # take snapshot
   curl -vs -X PUT "$ES_BASE_URL/_snapshot/$ES_SNAPSHOT_REPO/$1?wait_for_completion=true"
-  tar -cvzf ~/$SNAPSHOT_NAME.tar.gz $BACKUP_DIR
+  # compress backup to be able to move to other location
+  cd $BACKUP_DIR
+  sudo tar -cvzf ~/$SNAPSHOT_NAME.tar.gz *
 }
 
 _main(){
@@ -14,9 +17,9 @@ _main(){
   ES_SNAPSHOT_REPO="es_backup"
 
   date_now=`date +%Y%m%d%H%M%S`
-  #snapshot is created with today's date
+  # snapshot is created with today's date
   SNAPSHOT_NAME=snapshot_$date_now
-  #change $SNAPSHOT_NAME with name you wish to give to snapshot
+  # change $SNAPSHOT_NAME with name you wish to give to snapshot
   take_snapshot $SNAPSHOT_NAME
 }
 

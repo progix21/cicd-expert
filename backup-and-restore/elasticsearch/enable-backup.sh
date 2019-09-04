@@ -1,5 +1,5 @@
 #!/bin/bash
-# Timer
+# timer
 countdown(){
   for (( i=$1; i>0; i--)); do
     sleep 1 &
@@ -9,14 +9,14 @@ countdown(){
 }
 
 configure_es_backup(){
-  #create backup directory
+  # create backup directory
   sudo mkdir -p $BACKUP_DIR
-  #change permissions, backup directory must be owned by elasticsearch user
+  # change permissions, backup directory must be owned by elasticsearch user
   sudo chown -R $ES_USER:$ES_USER $BACKUP_DIR
-  #add path.repo to elasticsearch configuration file
+  # add path.repo to elasticsearch configuration file
   sudo sed -i "s|path.repo|#path.repo|g" $ES_CONFIG_FILE
   echo "path.repo: [\"$BACKUP_DIR\"]" | sudo tee -a $ES_CONFIG_FILE
-  #restart elasticsearch to enable changes made
+  # restart elasticsearch to enable changes made
   sudo service elasticsearch restart
   sudo service elasticsearch status
 }
@@ -39,12 +39,12 @@ _main(){
 
   # configuration to enable backup/snapshot
   configure_es_backup
-  #wait for 15 seconds, elasticsearch may take time to start
+  # wait for 15 seconds, elasticsearch may take time to start
   countdown 15
-  # Register snapshot repository
+  # register snapshot repository
   register_snapshot_repo
 
-  # Check if elasticsearch is up and running
+  # check if elasticsearch is up and running
   curl $ES_HOST:$ES_PORT
 }
 
